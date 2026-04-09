@@ -6,7 +6,6 @@
 <title>Artosphere Whitepaper v2.1</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-
 :root {
   --gold: #c8a000;
   --gold-light: #e8c840;
@@ -478,17 +477,13 @@ pre code {
 <li><a href="#16-competitive-landscape">Competitive Landscape</a></li>
 <li><a href="#17-legal--regulatory">Legal &amp; Regulatory</a></li>
 <li><a href="#18-references">References</a></li>
-<li><a href="#11-cryptographic-foundation">Cryptographic Foundation</a></li>
-<li><a href="#12-roadmap">Roadmap</a></li>
-<li><a href="#13-competitive-landscape">Competitive Landscape</a></li>
-<li><a href="#14-references">References</a></li>
 </ol>
 <hr />
 <h2 id="1-abstract">1. Abstract</h2>
 <p>Artosphere is an integrated ecosystem connecting fundamental physics research to on-chain economics. It comprises three components:</p>
 <ol>
 <li>
-<p><strong>The Artosphere Hypothesis</strong> — a framework deriving 35 Standard Model constants from the golden ratio φ = (1+√5)/2 and the Planck mass, with zero free parameters and 0.61% mean accuracy across 22 verified parameters. Published across 15 DOIs on CERN Zenodo.</p>
+<p><strong>The Artosphere Hypothesis</strong> — a minimal information entropy framework deriving 35 Standard Model constants from the golden ratio φ = (1+√5)/2 and the Planck mass, with no adjustable parameters and 0.61% mean accuracy across 22 verified parameters — with precision reaching 7 ppm for key electroweak observables (M_H) and 18 ppm for the muon mass. Published across 15 DOIs on CERN Zenodo.</p>
 </li>
 <li>
 <p><strong>ARTS Token</strong> — an ERC-20 token on Base L2 (Coinbase) where every economic parameter derives from physics: supply = F(16) × 10⁶ = 987,000,000 (Fibonacci number), governance quorum = sin²θ₁₂ = 30.9% (neutrino mixing angle confirmed by JUNO at 0.02σ), burn rate = 1/φ⁸ (universal suppression factor).</p>
@@ -497,11 +492,12 @@ pre code {
 <p><strong>On-Chain Scientific Journal</strong> — soulbound DOI NFTs, peer review with φ-weighted quorum, a citation graph on the blockchain, and Discovery Staking — a prediction market where users stake ARTS on whether physics predictions will be experimentally confirmed.</p>
 </li>
 </ol>
-<p>The three components form a flywheel: science produces predictions → the journal publishes and validates them → the token creates economic incentives for verification → royalties fund further research. To our knowledge, this is the first system that connects particle physics derivations to on-chain economic incentives through a verifiable prediction market.</p>
+<p>The three components form a <strong>self-verifying flywheel</strong>: science produces predictions → the journal publishes and validates them → the token creates economic incentives for verification → royalties fund further research. The system finances its own falsification — if the predictions are wrong, the market punishes them; if they are right, the market rewards precision.</p>
+<p>Artosphere does not just describe the laws of physics; it benchmarks the economy against them. By anchoring tokenomics to universal constants, we eliminate human bias in protocol governance, creating the first truly objective DeFi infrastructure for the future of science.</p>
 <p>19 smart contracts. 258 Foundry tests. 15 Zenodo DOIs. All open source (MIT license).</p>
 <hr />
 <h2 id="2-the-problem">2. The Problem</h2>
-<p>Modern science suffers from three systemic failures:</p>
+<p>Modern science suffers from four systemic failures:</p>
 <ol>
 <li>
 <p><strong>Replication crisis.</strong> Over 70% of researchers have tried and failed to reproduce another scientist's experiment (Nature, 2016). Published results are not reliably verified, and there is no economic incentive to replicate.</p>
@@ -512,14 +508,18 @@ pre code {
 <li>
 <p><strong>No market for truth.</strong> When a physicist publishes a testable prediction, there is no mechanism to aggregate collective conviction about whether it will be confirmed. Predictions sit in journals until an experiment happens — years or decades later — with no economic signal in between.</p>
 </li>
+<li>
+<p><strong>Ivory Tower Lag.</strong> Theoretical predictions can wait decades for experimental verification with zero feedback from reality. String theory and multiverse hypotheses are frequently criticized for being fundamentally untestable. Modern theoretical physics needs a real-time conviction signal — a way for the community to put skin in the game on verifiability.</p>
+</li>
 </ol>
-<p>Artosphere addresses all three:</p>
+<p>Artosphere addresses all four:</p>
 <ul>
-<li><strong>Discovery Staking</strong> creates an economic incentive for verification — stake tokens on whether a prediction will be confirmed. Correct predictors profit; incorrect stakes are partially burned.</li>
+<li><strong>Discovery Staking</strong> creates an economic incentive for verification — stake tokens on whether a prediction will be confirmed. Correct predictors profit; incorrect stakes are partially burned. Every stake is a real-time conviction signal with capital at risk.</li>
 <li><strong>On-chain journal</strong> with soulbound DOI NFTs gives scientists permanent, immutable priority proof and royalty income (9.02% of every resolved stake).</li>
 <li><strong>Physics-derived tokenomics</strong> ensures the economic system itself is grounded in verifiable mathematics, not arbitrary parameter choices.</li>
+<li><strong>Anti-unfalsifiability:</strong> Artosphere is the antithesis of untestable physics. Every prediction has a kill condition, a timeline, and an experiment. If you think it's wrong — you can literally bet against it.</li>
 </ul>
-<p><strong>Market opportunity:</strong> DeSci protocols have attracted $300M+ in funding (2023-2026). The academic publishing market is $28B. Prediction markets exceed $50B in volume. Artosphere sits at the intersection of all three.</p>
+<p><strong>Market opportunity:</strong> DeSci protocols have attracted $300M+ in funding (2023-2026). The academic publishing market is $28B. Prediction markets exceed $50B in volume. Artosphere sits at the intersection of all three — and compresses ~1200 bits of Standard Model information into ~100 bits (2 inputs: φ and M_Pl), making Discovery Staking the most information-efficient prediction market in existence.</p>
 <hr />
 <h2 id="3-the-artosphere-hypothesis">3. The Artosphere Hypothesis</h2>
 <h3 id="21-one-axiom">2.1 One Axiom</h3>
@@ -1020,11 +1020,22 @@ python papers/verify_paper3.py  # 22/22 PASS
 </ol>
 <h3 id="45-anti-sybil">4.5 Anti-Sybil</h3>
 <p>Hedging (staking both CONFIRM and REFUTE) is impossible — <code>userSide[discoveryId][msg.sender]</code> prevents dual-side staking. Analysis shows hedging produces −20.3% ROI loss.</p>
-<h3 id="46-founder-economics">4.6 Founder Economics</h3>
+<h3 id="46-orphan-prediction-protection">4.6 Orphan Prediction Protection</h3>
+<p>When a prediction is confirmed by experiment (e.g., χ-boson mass by HL-LHC), the 9.02% scientist royalty is split:
+- <strong>7%</strong> to the prediction author
+- <strong>2.02%</strong> to Treasury, earmarked for independent replication grants</p>
+<p>This ensures that confirmed predictions don't become "orphan knowledge" — the protocol funds independent verification of its own results.</p>
+<h3 id="47-soft-slashing-market-for-honest-criticism">4.7 Soft Slashing (Market for Honest Criticism)</h3>
+<p>When a prediction is <strong>refuted</strong> (Kill Condition triggered):
+- <strong>23.60%</strong> of the losing pool is burned (φ⁻³) — deflationary pressure
+- <strong>61.80%</strong> goes to those who correctly bet REFUTE — rewarding honest skepticism
+- <strong>9.02%</strong> goes to whoever submitted the refutation evidence (DOI link) — creating a <strong>market for honest criticism</strong></p>
+<p>This means it is economically rational to disprove wrong predictions. The protocol doesn't just reward being right — it rewards proving others wrong.</p>
+<h3 id="48-founder-economics">4.8 Founder Economics</h3>
 <p>The scientist (F.B. Sapronov) earns:
 - <strong>1.18% fee</strong> on every deposit (αₛ/10)
-- <strong>9.02% royalty</strong> (φ⁻⁵) from every resolved losing pool</p>
-<p>This creates a sustainable revenue model where scientific accuracy directly correlates with income.</p>
+- <strong>7% royalty</strong> from confirmed predictions (from the 9.02% φ⁻⁵ share)</p>
+<p>This creates a sustainable revenue model where scientific accuracy directly correlates with income. If predictions are wrong, the founder earns nothing from resolution — only the deposit fee.</p>
 <hr />
 <h2 id="7-fibonacci-fusion">7. Fibonacci Fusion</h2>
 <h3 id="51-the-physics">5.1 The Physics</h3>
@@ -1656,8 +1667,8 @@ python papers/verify_paper3.py  # 22/22 PASS
 <em>See Sections 13, 15, and 17 for security, risk, and legal disclosures.</em></p>
 </div>
 <div class="footer">
-<p>© 2026 F.B. Sapronov · ORCID: 0009-0008-1747-1200</p>
-<p><a href="https://basescan.org/token/0x1C11133D4dDa9D85a6696B020b0c48e2c24Ed0bf">Basescan</a> · <a href="https://github.com/fbsmna-coder/artosphere-contracts">GitHub</a> · <a href="https://doi.org/10.5281/zenodo.19471249">Zenodo</a> · <a href="https://t.me/ArtosphereNews">Telegram</a></p>
+<p>&copy; 2026 F.B. Sapronov &middot; ORCID: 0009-0008-1747-1200</p>
+<p><a href="https://basescan.org/token/0x1C11133D4dDa9D85a6696B020b0c48e2c24Ed0bf">Basescan</a> &middot; <a href="https://github.com/fbsmna-coder/artosphere-contracts">GitHub</a> &middot; <a href="https://doi.org/10.5281/zenodo.19471249">Zenodo</a> &middot; <a href="https://t.me/ArtosphereNews">Telegram</a></p>
 </div>
 </body>
 </html>
