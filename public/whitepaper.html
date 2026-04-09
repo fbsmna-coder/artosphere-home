@@ -461,7 +461,7 @@ pre code {
 </ol>
 <p>The three components form a <strong>self-verifying flywheel</strong>: science produces predictions → the journal publishes and validates them → the token creates economic incentives for verification → royalties fund further research. The system finances its own falsification — if the predictions are wrong, the market punishes them; if they are right, the market rewards precision.</p>
 <p>Artosphere does not just describe the laws of physics; it benchmarks the economy against them. By anchoring tokenomics to universal constants, we eliminate human bias in protocol governance, creating the first truly objective DeFi infrastructure for the future of science.</p>
-<p>20 smart contracts. 287 Foundry tests. 15 Zenodo DOIs. All open source (MIT license).</p>
+<p>22 smart contracts. 306 Foundry tests. 15 Zenodo DOIs. All open source (MIT license).</p>
 <hr />
 <h2 id="2-the-problem">2. The Problem</h2>
 <p>Modern science suffers from four systemic failures:</p>
@@ -1376,9 +1376,21 @@ python papers/verify_paper3.py  # 22/22 PASS
 <td><code>0x1D4E49E6...7b00</code></td>
 <td>Non-upgradeable</td>
 </tr>
+<tr>
+<td>19</td>
+<td><strong>KillSwitch</strong></td>
+<td><code>0x02709268...2D927</code></td>
+<td>Non-upgradeable</td>
+</tr>
+<tr>
+<td>20</td>
+<td><strong>FibonacciFusionV2</strong></td>
+<td><code>pending (VRF)</code></td>
+<td>Non-upgradeable (Chainlink VRF)</td>
+</tr>
 </tbody>
 </table>
-<p>Plus PhiMath (library) and ArtosphereConstants (library). <strong>20 contracts total.</strong></p>
+<p>Plus PhiMath (library) and ArtosphereConstants (library). <strong>22 contracts total.</strong></p>
 <p>Deploy wallet: <code>0xED7E49Cd347aAeF4879AF0c42C3B74780299a6A6</code></p>
 <h3 id="102-dependencies">10.2 Dependencies</h3>
 <ul>
@@ -1388,7 +1400,7 @@ python papers/verify_paper3.py  # 22/22 PASS
 </ul>
 <h3 id="103-test-coverage">10.3 Test Coverage</h3>
 <ul>
-<li><strong>Solidity:</strong> 258 tests across 15 test files (254 pass, 4 timing-dependent)</li>
+<li><strong>Solidity:</strong> 306 tests across 18 test files (303 pass, 3 timing-dependent) (302 pass, 4 timing-dependent)</li>
 <li><strong>Rust core:</strong> 107 tests (phi-Hash-256, Proof-of-φ, A5-Crypto v2)</li>
 <li><strong>PhiMath:</strong> 70/70 including Higgs-Flavor Identity on-chain verification</li>
 <li>All contracts verified on Basescan</li>
@@ -1406,7 +1418,7 @@ python papers/verify_paper3.py  # 22/22 PASS
 <p>Participants should consider the following risks:</p>
 <ol>
 <li>
-<p><strong>Smart contract risk.</strong> Despite 258 tests, no external audit has been completed. Undiscovered vulnerabilities could lead to loss of funds. Three contracts use upgradeable proxies controlled by a single EOA.</p>
+<p><strong>Smart contract risk.</strong> Despite 306 tests, no external audit has been completed. Undiscovered vulnerabilities could lead to loss of funds. Three contracts use upgradeable proxies controlled by a single EOA.</p>
 </li>
 <li>
 <p><strong>Regulatory risk.</strong> ARTS may be classified as a security in certain jurisdictions. Discovery Staking may be characterized as gambling. The regulatory landscape for DeSci tokens is evolving and uncertain.</p>
@@ -1487,7 +1499,7 @@ python papers/verify_paper3.py  # 22/22 PASS
 <h3 id="completed-april-2026">Completed (April 2026)</h3>
 <ul>
 <li>[x] 15 papers on CERN Zenodo (DOIs sealed)</li>
-<li>[x] 19 contracts on Base mainnet (verified)</li>
+<li>[x] 20 contracts on Base mainnet (verified)</li>
 <li>[x] DApp on Vercel (5 pages + /discoveries)</li>
 <li>[x] Twitter/Telegram bots (systemd on vps-fi3)</li>
 <li>[x] Discord server (25 channels, 6 categories)</li>

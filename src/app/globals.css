@@ -1,26 +1,142 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #060610;
+  --bg-surface: rgba(255,255,255,0.025);
+  --bg-glass: rgba(255,255,255,0.035);
+  --gold: #c8a000;
+  --gold-light: #ffd700;
+  --gold-dim: #8b6914;
+  --blue: #4488ff;
+  --green: #00c878;
+  --rose: #ff4466;
+  --amber: #d97706;
+  --text: #e8e8f0;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --border: rgba(200,160,0,0.12);
+  --border-hover: rgba(200,160,0,0.25);
+  --glow: rgba(200,160,0,0.08);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --font-sans: 'Inter', var(--font-geist-sans), system-ui;
+  --font-mono: 'JetBrains Mono', var(--font-geist-mono), monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+* { box-sizing: border-box; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+  overflow-x: hidden;
 }
+
+/* Glass cards */
+.glass {
+  background: var(--bg-glass);
+  border: 0.5px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.glass:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 0 40px var(--glow);
+}
+
+/* Gold gradient text */
+.gold-text {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Formula style (KaTeX-like) */
+.formula {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--gold);
+  font-size: 0.9em;
+  letter-spacing: -0.02em;
+}
+.formula-hero {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1em;
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold-light), var(--gold-dim));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Golden spiral animation */
+@keyframes spiral-unfurl {
+  from { stroke-dashoffset: 1000; opacity: 0.1; }
+  to { stroke-dashoffset: 0; opacity: 0.4; }
+}
+.spiral-path {
+  stroke-dasharray: 1000;
+  animation: spiral-unfurl 3s ease-out forwards;
+}
+
+/* Pulse indicator */
+@keyframes pulse-gold {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(200,160,0,0.4); }
+  50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(200,160,0,0); }
+}
+.pulse { animation: pulse-gold 2s ease-in-out infinite; }
+
+/* Fade in on scroll */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fade-up 0.6s ease-out both; }
+
+/* Ticker */
+.ticker-wrap {
+  overflow: hidden;
+  white-space: nowrap;
+}
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-content {
+  display: inline-block;
+  animation: ticker 40s linear infinite;
+}
+
+/* Status badges */
+.badge-proven { background: rgba(68,136,255,0.15); color: #6ea8ff; border: 0.5px solid rgba(68,136,255,0.2); }
+.badge-confirmed { background: rgba(0,200,120,0.15); color: #00c878; border: 0.5px solid rgba(0,200,120,0.2); }
+.badge-predicted { background: rgba(255,215,0,0.15); color: var(--gold-light); border: 0.5px solid rgba(255,215,0,0.2); }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-weight: 600; color: var(--text-secondary); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+td { font-size: 14px; color: var(--text); }
+th, td { padding: 14px 16px; border-bottom: 0.5px solid var(--border); }
+tr:hover td { background: var(--bg-surface); }
+
+/* Venn rings */
+.venn-ring {
+  border: 1.5px solid var(--gold);
+  border-radius: 50%;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+.venn-ring:hover { opacity: 1; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
