@@ -95,7 +95,7 @@ export default function Home() {
               { href: "https://scholar.artosphere.org", label: "Scholar" },
               { href: "https://defi.artosphere.org", label: "DeFi" },
               { href: "https://scholar.artosphere.org/verify", label: "Verify" },
-              { href: "/Artosphere_Whitepaper_v2.pdf", label: "Whitepaper" },
+              { href: "/whitepaper.html", label: "Whitepaper" },
             ].map((l) => (
               <a key={l.label} href={l.href} className="px-3 py-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--bg-surface)] transition-colors">
                 {l.label}
@@ -151,8 +151,8 @@ export default function Home() {
               <a href="https://defi.artosphere.org" className="px-7 py-3.5 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] font-medium hover:border-[var(--border-hover)] hover:text-[var(--text)] transition-colors">
                 Launch DeFi App
               </a>
-              <a href="/Artosphere_Whitepaper_v2.pdf" className="px-7 py-3.5 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] font-medium hover:border-[var(--border-hover)] hover:text-[var(--text)] transition-colors">
-                Whitepaper ↗
+              <a href="/whitepaper.html" className="px-7 py-3.5 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] font-medium hover:border-[var(--border-hover)] hover:text-[var(--text)] transition-colors">
+                Whitepaper
               </a>
             </div>
           </div>
@@ -224,8 +224,11 @@ export default function Home() {
           <a href="https://doi.org/10.5281/zenodo.19482719" target="_blank" rel="noopener noreferrer" className="text-sm text-[var(--gold)] hover:text-[var(--gold-light)] transition-colors">
             Master Action v2.0 (Zenodo) →
           </a>
-          <a href="/Artosphere_Whitepaper_v2.pdf" className="text-sm text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors">
+          <a href="/whitepaper.html" className="text-sm text-[var(--gold)] hover:text-[var(--gold-light)] transition-colors">
             Full derivations in Whitepaper →
+          </a>
+          <a href="/Artosphere_Whitepaper_v2.pdf" download className="text-sm text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors">
+            Download PDF ↓
           </a>
         </div>
       </section>
@@ -504,8 +507,8 @@ export default function Home() {
             <a href="https://scholar.artosphere.org" className="px-7 py-3.5 rounded-xl bg-gradient-to-r from-[var(--gold-dim)] to-[var(--gold)] text-black font-bold hover:from-[var(--gold)] hover:to-[var(--gold-light)] transition-all">
               Read the Papers
             </a>
-            <a href="/Artosphere_Whitepaper_v2.pdf" className="px-7 py-3.5 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] font-medium hover:border-[var(--border-hover)] hover:text-[var(--text)] transition-colors">
-              Whitepaper PDF
+            <a href="/whitepaper.html" className="px-7 py-3.5 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] font-medium hover:border-[var(--border-hover)] hover:text-[var(--text)] transition-colors">
+              Whitepaper
             </a>
             <a href="https://orcid.org/0009-0008-1747-1200" target="_blank" rel="noopener noreferrer" className="px-7 py-3.5 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] font-medium hover:border-[var(--border-hover)] hover:text-[var(--text)] transition-colors">
               ORCID Profile
@@ -543,7 +546,8 @@ export default function Home() {
             <div>
               <h4 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-3">Research</h4>
               <div className="space-y-2 text-sm text-[var(--text-muted)]">
-                <a href="/Artosphere_Whitepaper_v2.pdf" className="block hover:text-[var(--gold)]">Whitepaper v2.1</a>
+                <a href="/whitepaper.html" className="block hover:text-[var(--gold)]">Whitepaper v2.1</a>
+                <a href="/Artosphere_Whitepaper_v2.pdf" download className="block hover:text-[var(--gold)]">Download PDF</a>
                 <a href="https://doi.org/10.5281/zenodo.19482719" target="_blank" rel="noopener noreferrer" className="block hover:text-[var(--gold)]">Master Action (Zenodo)</a>
                 <a href="https://orcid.org/0009-0008-1747-1200" target="_blank" rel="noopener noreferrer" className="block hover:text-[var(--gold)]">ORCID Profile</a>
               </div>
