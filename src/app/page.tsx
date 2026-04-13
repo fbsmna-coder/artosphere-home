@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 /* ═══════════════════════════════════════════════════════════════════
-   DATA — from Whitepaper v2.1
+   DATA — from Whitepaper v2.2
    ═══════════════════════════════════════════════════════════════════ */
 
 const RESULTS = [
@@ -38,7 +38,7 @@ const CONTRACTS = [
   { name: "DiscoveryStaking", addr: "0x3Fc4d3466743e0c068797D64A91EF7A8826a19e2", type: "Prediction Market" },
   { name: "DiscoveryOracle", addr: "0xd0f23765Fe50b59f539fF695B17aF5b23D4AcBE0", type: "Multisig Oracle" },
   { name: "ResearcherRegistry", addr: "0x295410735a0d9f68850a94b97a43fff7a5961cc9", type: "ORCID On-Chain" },
-  { name: "PhiStaking", addr: "0x37ab9c369d3bdf428d3081f54e570a63f4bcd6a4", type: "Fibonacci APY" },
+  { name: "PhiStaking", addr: "0x5ba76643E3ef93Ab76Efc8e162594405A3c79f7B", type: "Fibonacci APY" },
   { name: "PhiGovernor", addr: "0xae286dca8e8bb431dbea0049f9ee7dad5f642680", type: "61.8% Supermajority" },
   { name: "ZeckendorfTreasury", addr: "0x250161bF42227171172e847B43623e9a83513b55", type: "6 Fibonacci Compartments" },
 ];
@@ -126,7 +126,7 @@ export default function Home() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--bg-surface)] border border-[var(--border)] text-xs mb-8">
               <span className="w-2 h-2 rounded-full bg-[var(--green)] pulse"></span>
-              <span className="text-[var(--text-muted)]">Live on Base Mainnet — 20 contracts deployed</span>
+              <span className="text-[var(--text-muted)]">Live on Base Mainnet — 22 contracts deployed</span>
             </div>
 
             <h1 className="text-5xl md:text-6xl font-extrabold leading-[1.1] tracking-tight">
@@ -165,9 +165,9 @@ export default function Home() {
           {[
             { v: "36", l: "Parameters", s: "from 2 inputs" },
             { v: "0.61%", l: "Mean Accuracy", s: "22 verified" },
-            { v: "17", l: "Zenodo DOIs", s: "CERN-archived" },
+            { v: "15", l: "Zenodo DOIs", s: "CERN-archived" },
             { v: "15", l: "On-Chain NFTs", s: "soulbound" },
-            { v: "20", l: "Smart Contracts", s: "Base Mainnet" },
+            { v: "22", l: "Smart Contracts", s: "306 Foundry tests" },
             { v: "987M", l: "ARTS Supply", s: "F(16) × 10⁶" },
             { v: "0", l: "Free Parameters", s: "everything derived" },
           ].map((m) => (
@@ -435,7 +435,7 @@ export default function Home() {
       <section className="bg-[var(--bg-surface)] border-y border-[var(--border)] py-20">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-3xl font-bold text-center mb-3">Smart Contracts</h2>
-          <p className="text-[var(--text-secondary)] text-center mb-10">20 contracts on Base Mainnet. Verified on Sourcify. MIT license.</p>
+          <p className="text-[var(--text-secondary)] text-center mb-10">22 contracts on Base Mainnet. 306 Foundry tests. Verified on Sourcify. MIT license.</p>
           <div className="glass !p-0 overflow-hidden max-w-3xl mx-auto">
             <table>
               <thead>
@@ -485,7 +485,7 @@ export default function Home() {
               </div>
               <div className="border-t border-[var(--border)] pt-4 text-[var(--text-muted)]">
                 <p className="mb-2">Weighted score: <strong className="text-[var(--text)]">~55% truly derived</strong>, ~45% empirical pattern-matching.</p>
-                <p className="mb-2">Not yet peer-reviewed in traditional journals. 17 DOIs on CERN Zenodo establish priority.</p>
+                <p className="mb-2">Not yet peer-reviewed in traditional journals. 15 DOIs on CERN Zenodo establish priority.</p>
                 <p className="mb-2">arXiv submission pending endorsement.</p>
                 <p className="text-[var(--gold)]">If you think it's wrong — you can literally stake against it.</p>
               </div>
@@ -520,7 +520,7 @@ export default function Home() {
       {/* ═══ FOOTER ═══ */}
       <footer className="border-t border-[var(--border)] py-12 bg-[var(--bg-surface)]">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Image src="/logo.jpeg" alt="Artosphere" width={24} height={24} className="rounded" />
@@ -546,7 +546,7 @@ export default function Home() {
             <div>
               <h4 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-3">Research</h4>
               <div className="space-y-2 text-sm text-[var(--text-muted)]">
-                <a href="/whitepaper.html" className="block hover:text-[var(--gold)]">Whitepaper v2.1</a>
+                <a href="/whitepaper.html" className="block hover:text-[var(--gold)]">Whitepaper v2.2</a>
                 <a href="/Artosphere_Whitepaper_v2.pdf" download className="block hover:text-[var(--gold)]">Download PDF</a>
                 <a href="https://doi.org/10.5281/zenodo.19482719" target="_blank" rel="noopener noreferrer" className="block hover:text-[var(--gold)]">Master Action (Zenodo)</a>
                 <a href="https://orcid.org/0009-0008-1747-1200" target="_blank" rel="noopener noreferrer" className="block hover:text-[var(--gold)]">ORCID Profile</a>
@@ -555,9 +555,20 @@ export default function Home() {
             <div>
               <h4 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-3">On-Chain</h4>
               <div className="space-y-2 text-sm text-[var(--text-muted)]">
+                <a href="https://basescan.org/token/0x1C11133D4dDa9D85a6696B020b0c48e2c24Ed0bf" target="_blank" rel="noopener noreferrer" className="block hover:text-[var(--gold)]">ARTS Token</a>
                 <a href="https://basescan.org/address/0xA345C41e74Afc16f9071C0EAa5Ac71b0BDfe1D49" target="_blank" rel="noopener noreferrer" className="block hover:text-[var(--gold)]">Discovery NFTs</a>
-                <a href="https://basescan.org/address/0x1C11133D4dDa9D85a6696B020b0c48e2c24Ed0bf" target="_blank" rel="noopener noreferrer" className="block hover:text-[var(--gold)]">ARTS Token</a>
                 <a href="https://basescan.org/address/0x3Fc4d3466743e0c068797D64A91EF7A8826a19e2" target="_blank" rel="noopener noreferrer" className="block hover:text-[var(--gold)]">Discovery Staking</a>
+                <a href="https://github.com/fbsmna-coder/artosphere-contracts" target="_blank" rel="noopener noreferrer" className="block hover:text-[var(--gold)]">GitHub</a>
+              </div>
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-3">Community</h4>
+              <div className="space-y-2 text-sm text-[var(--text-muted)]">
+                <a href="https://t.me/ArtosphereNews" target="_blank" rel="noopener noreferrer" className="block hover:text-[var(--gold)]">Telegram News</a>
+                <a href="https://t.me/ArtosphereCommunity" target="_blank" rel="noopener noreferrer" className="block hover:text-[var(--gold)]">Telegram Community</a>
+                <a href="https://x.com/FSspronov" target="_blank" rel="noopener noreferrer" className="block hover:text-[var(--gold)]">X / Twitter</a>
+                <a href="https://discord.gg/artosphere" target="_blank" rel="noopener noreferrer" className="block hover:text-[var(--gold)]">Discord</a>
+                <a href="https://doi.org/10.5281/zenodo.19471249" target="_blank" rel="noopener noreferrer" className="block hover:text-[var(--gold)]">Zenodo</a>
               </div>
             </div>
           </div>
