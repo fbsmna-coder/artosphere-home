@@ -16,9 +16,12 @@
 4. [Tokenomics](#tokenomics)
 5. [Governance](#governance)
 6. [Experimental Roadmap](#experimental-roadmap)
-7. [Risk Disclosure](#risk-disclosure)
-8. [Deployed Contracts](#deployed-contracts)
-9. [References](#references)
+7. [Security](#security)
+8. [Risk Factors](#risk-factors)
+9. [Competitive Landscape](#competitive-landscape)
+10. [Legal and Regulatory](#legal-and-regulatory)
+11. [Deployed Contracts](#deployed-contracts)
+12. [References](#references)
 
 ---
 
@@ -253,36 +256,220 @@ Four of the five sectors are expected to resolve between 2026 and 2033.
 
 ---
 
-## 7. Risk Disclosure
+## 7. Security
 
-### 7.1 Scientific Risk
+### 7.1 Audit Status
 
-The Artosphere Hypothesis has an honestly assessed prior probability of 15–16% of being correct. There is approximately an 85% chance that one or more Tier 1 predictions will be refuted by future experiments.
+All contracts are open-source under the MIT license and published at `github.com/fbsmna-coder/artosphere-contracts`. Source code is verifiable and reproducible via Foundry.
 
-The protocol is designed to continue functioning and creating value in the refutation scenario — refuted predictions trigger the same emission as confirmed ones, and the HypothesisEvolutionFund finances alternative research directions. However, long-term token value may be materially impacted by scientific outcomes.
+At the time of writing, **no third-party professional audit has been commissioned**. The following audit pipeline is planned:
 
-### 7.2 Technical Risk
+- **Q2 2026:** Code4rena competitive audit for core contracts (PhiCoin, PhiStaking V3, ExperimentMilestoneProtocol, MilestoneEmission, HypothesisEvolutionFund)
+- **Q3 2026:** Internal formal verification passes (Certora or Halmos) for critical invariants (supply cap, emission limits, role boundaries)
+- **Ongoing:** Immunefi-style bug bounty program funded from HypothesisEvolutionFund once protocol activity begins
 
-- **Smart contract risk.** All contracts are open-source under MIT license. A full third-party audit has not been commissioned at the time of writing. A competitive audit is planned for Q2–Q3 2026.
-- **Oracle risk.** The AI oracle may produce incorrect result submissions. The 7-day challenge window and human arbitration fallback mitigate but do not eliminate this risk.
-- **Upgrade risk.** PhiCoin, PhiStaking V3, and DiscoveryStaking are UUPS upgradeable contracts. The `UPGRADER_ROLE` is held by the Safe multisig. Upgrades are not time-locked.
-- **Key management risk.** The Safe currently operates 1-of-1. Loss or compromise of the key would result in loss of administrative control until migration to 2-of-3 is completed.
+Prospective holders should assume the contracts may contain bugs until a full audit is completed. No prior incident history exists because no user interactions have occurred.
 
-### 7.3 Regulatory Risk
+### 7.2 Upgrade Authority
 
-PhiAMM is a spot automated market maker without leverage. Artosphere has not conducted an ICO, presale, or public sale. The protocol has not been tested in court and no legal opinion guarantees any specific regulatory classification.
+Three contracts are UUPS-upgradeable:
+- PhiCoin (ARTS token)
+- PhiStaking V3
+- DiscoveryStaking
 
-### 7.4 No Investment Advice
+The `UPGRADER_ROLE` on each is held by the Gnosis Safe multisig. There is no timelock on upgrades. The founder has committed to publishing any planned upgrade at least 72 hours before execution via official channels (artosphere.org, @FSspronov on X).
 
-This whitepaper is a technical and scientific description of the Artosphere protocol. It is not investment advice, solicitation, or an offer to sell securities. ARTS is a research instrument tied to experimental outcomes with a 15% prior probability of the underlying hypothesis being correct. Prospective holders should assume maximum loss and deploy only capital they can afford to write off.
+All other contracts (PhiAMM, ExperimentMilestoneProtocol, ScienceOracle, MilestoneEmission, HypothesisEvolutionFund) are **non-upgradeable**. Their bytecode is permanent.
+
+### 7.3 Admin Privileges
+
+The Safe multisig holds the following roles across the protocol:
+
+| Role | Contracts | Authority |
+|------|-----------|-----------|
+| `DEFAULT_ADMIN_ROLE` | All | Grant and revoke other roles |
+| `UPGRADER_ROLE` | 3 UUPS proxies | Execute contract upgrades |
+| `APPROVER_ROLE` | HypothesisEvolutionFund | Approve grants and bounties |
+
+Contract-to-contract roles (not held by any human):
+
+| Role | Holder | Purpose |
+|------|--------|---------|
+| `ORACLE_ROLE` | ScienceOracle | Resolve sectors |
+| `ARBITER_ROLE` | ResearcherRegistry 2-of-3 | Resolve oracle disputes |
+| `MINTER_ROLE` on PhiCoin | MilestoneEmission, PhiStaking V3 | Mint ARTS for emissions and rewards |
+
+No single address holds standalone minting authority. Minting requires the full ExperimentMilestoneProtocol → MilestoneEmission → PhiCoin chain, which requires either oracle consensus or ORCID-verified arbitration.
+
+### 7.4 Oracle Security
+
+The ScienceOracle implements a four-layer defense against result manipulation:
+
+1. **Dual AI consensus (off-chain).** Two independent large language models (Claude and GPT) must both agree on the extracted numerical result. Divergent analyses are discarded.
+2. **Chainlink Functions transport.** Results are submitted to the oracle contract via Chainlink Functions nodes, preventing a single off-chain submitter from controlling the data flow.
+3. **7-day permissionless challenge window.** Any address can challenge a pending result with a 0.001 ETH bond. A single honest challenger blocks the finalization.
+4. **Human arbitration.** If challenged, the ResearcherRegistry 2-of-3 ORCID-verified arbiter multisig resolves the dispute. Arbiters are public physicists whose professional reputation is at stake.
+
+This design makes collusion extraction-resistant: corrupting the result would require simultaneously compromising two AI providers, the Chainlink node infrastructure, the entire community's ability to challenge, and the ORCID arbiters.
+
+### 7.5 Known Issues
+
+Transparently documented unresolved issues as of the whitepaper date:
+
+- **Grant accountability gap.** Once a grant is disbursed from HypothesisEvolutionFund, no on-chain mechanism currently verifies that the recipient actually completes the funded research. A milestone-based release pattern (partial disbursement on approval, remainder on publication evidence) is planned but not yet implemented.
+- **Safe 1-of-1.** The administrative multisig currently has a single owner. Migration to 2-of-3 with additional ORCID-verified signers is prioritized for Q2 2026.
+- **No MEV protection on PhiAMM.** The AMM does not implement MEV-resistant mechanisms (no private mempool, no commit-reveal). Sandwich attacks are theoretically possible once trading begins.
 
 ---
 
-## 8. Deployed Contracts
+## 8. Risk Factors
+
+### 8.1 Scientific Risk
+
+The Artosphere Hypothesis has a prior probability of 15–16% of being correct based on internal hostile audit. This implies approximately 85% probability that one or more Tier 1 predictions will be refuted by future experiments.
+
+The protocol architecture is designed to continue functioning across all experimental outcomes. Refuted predictions trigger the same token emission as confirmed ones, and the HypothesisEvolutionFund finances alternative research directions on refutation. However, **long-term token value may be materially impacted** by scientific outcomes, particularly if:
+
+- Multiple Tier 1 predictions are refuted simultaneously
+- The JUNO final precision measurement (2028–2030) deviates significantly from 1/(2φ)
+- The scientific community rejects the algebraic framework despite individual predictions holding
+
+### 8.2 Technical Risk
+
+- **Smart contract vulnerabilities.** Contracts may contain bugs that enable unauthorized minting, fund extraction, or role escalation. No third-party audit has been completed.
+- **Oracle manipulation.** The AI oracle relies on off-chain infrastructure (Chainlink Functions, LLM providers, arXiv API). Outage or manipulation of these dependencies could delay or corrupt sector resolution.
+- **Upgrade risk.** UUPS upgrades on three core contracts could introduce new vulnerabilities or change protocol behavior. No on-chain timelock enforces a delay.
+- **Key management.** The Safe 1-of-1 private key is a single point of failure. Loss would result in loss of administrative control. Compromise would result in full protocol takeover.
+- **Dependency risk.** Critical dependencies include OpenZeppelin contracts, Chainlink Functions, Base L2 sequencer, and Aerodrome DEX. Any of these introducing bugs or changing terms could affect the protocol.
+
+### 8.3 Market and Liquidity Risk
+
+- **Pre-launch state.** As of the whitepaper date, no public trading has occurred. There is no established market price, no liquidity pool, and no trading volume.
+- **Bootstrap dependency.** Initial liquidity will depend on founder-provided seed capital and first milestone emission. Until sufficient liquidity depth accumulates, slippage on any trade may be severe.
+- **Low float.** If staking lock-up rates are high, circulating supply may be very low, amplifying price volatility.
+- **No market makers.** No professional market maker agreement exists. Spread and depth will depend on organic liquidity provision.
+
+### 8.4 Regulatory Risk
+
+- **Securities classification uncertainty.** ARTS has not been formally classified by any regulator. The founder's position (see Section 10) is that ARTS does not meet the Howey test, but this has not been tested in court.
+- **MiCA exposure.** Once public trading occurs within the EU, MiCA whitepaper notification to ESMA or the Spanish CNMV may be required. The protocol is currently pre-launch and outside MiCA's trigger conditions.
+- **Tax treatment.** Token receipts (staking rewards, grants, bounties) may create taxable events in participants' jurisdictions. No tax advice is provided.
+- **Sanctions.** PhiAMM is a decentralized contract with no KYC. Interactions from sanctioned addresses are not technically prevented, creating theoretical sanctions exposure for protocol participants.
+
+### 8.5 Founder Dependency
+
+The protocol is currently developed and administered by a single individual (F.B. Sapronov). This creates concentrated risk:
+
+- **Single-person continuity.** Illness, incapacitation, or loss of interest would stall protocol development until alternative governance is established.
+- **Reputational dependency.** The protocol's credibility is tied to the founder's public scientific reputation. Damage to that reputation, whether justified or not, affects the protocol.
+- **Key person risk.** Role migration to a 2-of-3 multisig with independent signers is planned but not complete.
+
+### 8.6 Scientific Publication Risk
+
+Predictions are registered in Zenodo depositions with DOI timestamps. However:
+
+- Zenodo is a CERN-hosted service and is subject to CERN policy changes.
+- The arXiv endorsement process for direct submission is ongoing and not yet complete.
+- If traditional peer review rejects the hypothesis publicly, protocol narrative value may be impaired regardless of experimental outcomes.
+
+### 8.7 No Investment Advice
+
+This whitepaper is a technical and scientific description of the Artosphere protocol. It is not investment advice, solicitation, or an offer to sell securities. ARTS is a research instrument tied to experimental outcomes with a 15% prior probability of the underlying hypothesis being correct.
+
+**Prospective holders should assume maximum loss and deploy only capital they can afford to write off.**
+
+---
+
+## 9. Competitive Landscape
+
+Artosphere occupies a specific niche within the broader decentralized science ecosystem. Comparable projects and positioning:
+
+| Project | Category | Mechanism | Differentiation from Artosphere |
+|---------|----------|-----------|--------------------------------|
+| **VitaDAO** | DeSci (longevity) | IP-NFTs funded by DAO token votes | Token votes fund research; Artosphere emits tokens on experimental outcomes |
+| **Molecule** | DeSci infrastructure | IP-NFT marketplace | Tokenizes intellectual property; Artosphere tokenizes predictions |
+| **ResearchHub** | DeSci (publishing) | Scientific content rewards (RSC) | Rewards contribution; Artosphere rewards predictive accuracy |
+| **Ocean Protocol** | Data marketplace | Data tokens and compute-to-data | Generic data tokenization; Artosphere specific to physics experiments |
+| **Polymarket (science topics)** | Prediction markets | Binary/scalar markets with USDC | Speculative markets; Artosphere ties markets to token emission and research funding |
+| **Gitcoin Grants** | Public goods funding | Quadratic funding rounds | Community-voted grants; Artosphere automates grant release on experimental resolution |
+
+### 9.1 Positioning
+
+Artosphere is the first DeSci protocol with the following combined properties:
+
+1. **Token emission tied to real physics experiments**, not to team decisions, time, or block number
+2. **Symmetric economic response** to confirmation and refutation (both trigger identical emission and distribution)
+3. **Dual-AI oracle** reading physics publications to drive on-chain state transitions
+4. **Self-replenishing grant fund** that both depletes (through grants) and refills (through emission) on each milestone
+
+### 9.2 Collaboration Potential
+
+Artosphere is designed to complement existing DeSci projects rather than compete. Possible integrations:
+
+- **VitaDAO / Molecule partnership** for IP-NFT tokens representing Artosphere-funded research outputs
+- **Ocean data tokens** for experimental datasets referenced in Artosphere predictions
+- **ResearcherRegistry federation** with other DeSci identity systems based on ORCID
+- **Chainlink Functions** already integrated for oracle transport
+
+The protocol does not pursue network-effect lock-in. Researchers using Artosphere can publish and fund work elsewhere in parallel.
+
+---
+
+## 10. Legal and Regulatory
+
+### 10.1 Token Classification
+
+The founder's position, not constituting legal advice and not verified by external counsel at the time of writing, is that ARTS is **not a security** under the Howey test:
+
+- **Investment of money:** No primary sale has occurred. No ICO, presale, private round, or token distribution has taken place. Investors have not transferred value in exchange for ARTS.
+- **Common enterprise:** The protocol does not operate a managed investment vehicle. Token holders do not pool capital under central management.
+- **Expectation of profits:** The protocol does not guarantee, imply, or promote price appreciation. Official materials disclose 15% prior probability for the underlying hypothesis and 85% probability that one or more predictions will be refuted.
+- **Efforts of others:** The primary value driver is experimental outcomes external to the protocol team (JUNO, n2EDM, HL-LHC, DUNE, FCC-ee collaborations). Token value does not depend on ongoing promotional or managerial efforts by the founder.
+
+This analysis has not been reviewed by US or EU securities counsel. Prospective holders in any jurisdiction should obtain independent legal advice before acquiring ARTS.
+
+### 10.2 MiCA (EU Regulation 2023/1114)
+
+MiCA became fully applicable to crypto-asset service providers in the EU as of 2024. Under MiCA:
+
+- ARTS may fall within the "Other crypto-asset" category (neither e-money token nor asset-referenced token).
+- A MiCA whitepaper notification to the competent national authority (Spanish CNMV, where the founder is resident, or the destination market's regulator) may be required before any "offer to the public" or "admission to trading."
+- **As of the whitepaper date, no offer to the public has occurred within the EU.** The protocol is pre-launch. MiCA's trigger conditions have not been activated.
+
+Formal MiCA compliance review is planned prior to any public liquidity event.
+
+### 10.3 Jurisdiction
+
+- **Founder residence:** Spain (EU member state).
+- **Smart contract deployment:** Base L2 (Coinbase network), physically distributed globally, no central server.
+- **Governance entity:** None. The protocol operates through smart contracts and the Gnosis Safe multisig. No legal wrapper (DAO LLC, foundation, association) has been established.
+- **Future structure:** A Swiss Verein or Liechtenstein Stiftung structure for the governance council is under consideration for 2026–2027, contingent on protocol activity levels.
+
+### 10.4 Prohibited Jurisdictions
+
+ARTS is not marketed, solicited, or available in jurisdictions where such activity would violate local law. Participants are responsible for ensuring compliance with their local regulatory environment. The protocol cannot and does not enforce jurisdiction-based access controls at the smart contract level.
+
+### 10.5 Anti-Money-Laundering
+
+The protocol itself does not perform KYC or transaction monitoring. PhiAMM is a non-custodial automated market maker. Participants using centralized services to on-ramp or off-ramp ARTS will be subject to those services' AML requirements.
+
+### 10.6 Intellectual Property
+
+All Artosphere smart contract source code is released under the **MIT License** and is freely forkable. Scientific content (Zenodo papers) is licensed under **Creative Commons Attribution (CC BY 4.0)** and is openly citable. The project claims no patent coverage on the algebraic identities discussed in the scientific foundation.
+
+### 10.7 Disclaimer
+
+This whitepaper is provided for informational purposes only. It is not an offer to sell, a solicitation of an offer to buy, or a recommendation regarding any security, investment, or crypto-asset. It is not tax, legal, or investment advice. No regulatory authority has reviewed, approved, or endorsed this document or the ARTS protocol.
+
+**Forward-looking statements** (including experimental roadmap, emission schedule, and predicted scientific outcomes) are subject to change based on experimental results, scientific discoveries, regulatory developments, and protocol evolution. The founder makes no guarantee that any described milestone, feature, or outcome will occur.
+
+---
+
+## 11. Deployed Contracts
 
 All contracts are live on **Base Mainnet (chain ID 8453)** and verified on Basescan.
 
-### 8.1 Token and Staking Layer
+### 11.1 Token and Staking Layer
 
 | Contract | Address |
 |----------|---------|
@@ -294,17 +481,17 @@ All contracts are live on **Base Mainnet (chain ID 8453)** and verified on Bases
 | ResearcherRegistry | `0x295410735a0d9f68850a94b97a43fff7a5961cc9` |
 | HypothesisEvolutionFund (seed) | `0x5c818B269A484321D650b526e4d47cF8D29dCF4B` |
 
-### 8.2 Governance
+### 11.2 Governance
 
 | Contract | Address |
 |----------|---------|
 | Gnosis Safe (multisig admin) | `0x75BA1367c9B2B750A1751Dd527902e0f1d67a8fb` |
 
-### 8.3 Experiment Milestone Protocol v3
+### 11.3 Experiment Milestone Protocol v3
 
 The four v3 contracts (ExperimentMilestoneProtocol, ScienceOracle, MilestoneEmission, new HypothesisEvolutionFund) are written and compiling. Deployment addresses will be published in the authoritative `DEPLOYED_ADDRESSES.md` file upon launch.
 
-### 8.4 Source Code
+### 11.4 Source Code
 
 All Solidity contracts, Foundry scripts, and test suites are available at:
 
@@ -314,9 +501,9 @@ License: MIT
 
 ---
 
-## 9. References
+## 12. References
 
-### 9.1 Artosphere Scientific Papers (Zenodo)
+### 12.1 Artosphere Scientific Papers (Zenodo)
 
 1. Sapronov, F.B. *Framework: 36 Standard Model Parameters from {M_Planck, φ}.* Zenodo. DOI: 10.5281/zenodo.19484143
 2. Sapronov, F.B. *Master Action — The Artosphere Hypothesis.* Zenodo. DOI: 10.5281/zenodo.19481141
@@ -333,7 +520,7 @@ License: MIT
 13. Sapronov, F.B. *Z Boson Mass from Gauge-Spectral Eigenvalue.* Zenodo. DOI: 10.5281/zenodo.19473552
 14. Sapronov, F.B. *Complete Electroweak Spectrum (L4 Spectral).* Zenodo. DOI: 10.5281/zenodo.19473762
 
-### 9.2 External Scientific References
+### 12.2 External Scientific References
 
 - JUNO Collaboration (2025). *First Measurement of Solar Neutrino Mixing from Reactor Antineutrinos.* (arXiv, 59-day dataset)
 - Esteban, I., Gonzalez-Garcia, M.C., Maltoni, M. et al. *NuFIT 5.2: Three-Flavor Global Fit to Neutrino Oscillation Data.*
@@ -344,7 +531,7 @@ License: MIT
 - n2EDM Collaboration (2021). *Design of n2EDM.* EPJ C 81, 512.
 - HL-LHC ATLAS+CMS Physics Projections (2025). ATL-PHYS-PUB-2025-018.
 
-### 9.3 Technical References
+### 12.3 Technical References
 
 - OpenZeppelin Contracts v5.x — `github.com/OpenZeppelin/openzeppelin-contracts`
 - Gnosis Safe — `github.com/safe-global/safe-smart-account`
